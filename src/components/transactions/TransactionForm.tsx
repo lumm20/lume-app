@@ -6,7 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { transactionSchema, type TransactionFormValues } from "@/lib/validations/transaction"
 import { INCOME_CATEGORIES, EXPENSE_CATEGORIES } from "@/types/index"
 import { createTransaction } from "@/app/(dashboard)/transactions/new/actions"
-
+import { SubmitButton } from "../ui/SubmitButton"
+"w-full rounded-xl bg-stone-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
 export function TransactionForm() {
   const [loading, setLoading] = useState(false)
 
@@ -39,16 +40,16 @@ export function TransactionForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {/* Tipo */}
-      <div className="flex gap-3">
+      <div className="flex gap-2">
         {(["income", "expense"] as const).map((t) => (
           <label key={t} className="flex-1 cursor-pointer">
             <input type="radio" value={t} {...register("t_type")} className="sr-only" />
-            <div className={`rounded-lg border-2 px-4 py-3 text-center text-sm font-medium transition-all ${
+            <div className={`rounded-xl border-2 px-4 py-2.5 text-center text-sm font-medium transition-all ${
               type === t
                 ? t === "income"
-                  ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                  : "border-red-400 bg-red-50 text-red-600"
-                : "border-gray-200 text-gray-500 hover:border-gray-300"
+                  ? "border-emerald-400 bg-emerald-50 text-emerald-700"
+                  : "border-rose-300 bg-rose-50 text-rose-600"
+                : "border-stone-200 text-stone-400 hover:border-stone-300 hover:bg-stone-50"
             }`}>
               {t === "income" ? "💰 Ingreso" : "🛒 Gasto"}
             </div>
@@ -59,7 +60,7 @@ export function TransactionForm() {
       {/* Categoría */}
       <Field label="Categoría" error={errors.category?.message}>
         <select {...register("category")}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors">
           <option value="">Seleccionar...</option>
           {categories.map((c) => (
             <option key={c} value={c}>{c}</option>
@@ -75,7 +76,7 @@ export function TransactionForm() {
           min="0"
           placeholder="0.00"
           {...register("amount", { valueAsNumber: true })}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors"
         />
       </Field>
 
@@ -84,7 +85,7 @@ export function TransactionForm() {
         <input
           type="date"
           {...register("t_date")}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors"
         />
       </Field>
 
@@ -94,7 +95,7 @@ export function TransactionForm() {
           type="text"
           placeholder="Ej. Pastel 3 pisos boda García"
           {...register("description")}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors"
         />
       </Field>
 
@@ -104,17 +105,11 @@ export function TransactionForm() {
           placeholder="Ej. Pago anticipado, pendiente entregar el sábado"
           rows={2}
           {...register("notes")}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors resize-none"
         />
       </Field>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors"
-      >
-        {loading ? "Guardando..." : "Guardar movimiento"}
-      </button>
+      <SubmitButton initialText="Guardar movimiento" loadingText="Guardando..." className="w-full rounded-xl bg-stone-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"/>
     </form>
   )
 }
@@ -125,10 +120,10 @@ function Field({ label, error, children }: {
   children: React.ReactNode
 }) {
   return (
-    <div className="space-y-1">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
+    <div className="space-y-1.5">
+      <label className="block text-sm font-medium text-stone-600">{label}</label>
       {children}
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="text-xs text-rose-500">{error}</p>}
     </div>
   )
 }

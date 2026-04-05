@@ -11,13 +11,13 @@ export default async function DashboardPage() {
   const { data: transactions } = await supabase
     .from("transactions")
     .select("*")
-    .gte("transaction_date", from)
-    .lte("transaction_date", to)
-    .order("transaction_date", { ascending: false })
+    .gte("t_date", from)
+    .lte("t_date", to)
+    .order("t_date", { ascending: false })
 
   const summary: MonthtlySummary = (transactions ?? []).reduce(
     (acc, t: Transaction) => {
-      if (t.transaction_type === "income") acc.income += t.amount
+      if (t.t_type === "income") acc.income += t.amount
       else acc.expenses += t.amount
       acc.totalTransactions++
       return acc
@@ -63,7 +63,7 @@ export default async function DashboardPage() {
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
           <h2 className="font-medium text-gray-800">Últimos movimientos</h2>
-          <a href="/movimientos/nuevo"
+          <a href="/transactions/new"
             className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">
             + Agregar
           </a>
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
           <tbody className="divide-y divide-gray-50">
             {(transactions ?? []).slice(0, 8).map((t: Transaction) => (
               <tr key={t.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-5 py-3 text-gray-500 whitespace-nowrap">{t.transaction_date}</td>
+                <td className="px-5 py-3 text-gray-500 whitespace-nowrap">{t.t_date}</td>
                 <td className="px-5 py-3 text-gray-800">{t.description ?? "—"}</td>
                 <td className="px-5 py-3">
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
@@ -88,9 +88,9 @@ export default async function DashboardPage() {
                   </span>
                 </td>
                 <td className={`px-5 py-3 text-right font-medium ${
-                  t.transaction_type === "income" ? "text-emerald-600" : "text-red-500"
+                  t.t_type === "income" ? "text-emerald-600" : "text-red-500"
                 }`}>
-                  {t.transaction_type === "income" ? "+" : "−"}{formatCurrency(t.amount)}
+                  {t.t_type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                 </td>
               </tr>
             ))}
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
               <tr>
                 <td colSpan={4} className="px-5 py-10 text-center text-gray-400">
                   Sin movimientos este mes.{" "}
-                  <a href="/movimientos/nuevo" className="text-emerald-600 hover:underline">
+                  <a href="/transactions/new" className="text-emerald-600 hover:underline">
                     Agrega el primero
                   </a>
                 </td>

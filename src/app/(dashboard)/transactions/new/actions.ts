@@ -11,14 +11,15 @@ export async function createTransaction(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
+  console.log("formdata:",Object.fromEntries(formData.entries()));
   // Parsear y validar con Zod
   const raw = {
-    tipo: formData.get("tipo"),
-    categoria: formData.get("categoria"),
-    descripcion: formData.get("descripcion") || undefined,
-    monto: Number(formData.get("monto")),
-    fecha: formData.get("fecha"),
-    notas: formData.get("notas") || undefined,
+    t_type: formData.get("t_type"),
+    category: formData.get("category"),
+    description: formData.get("description") || undefined,
+    amount: Number(formData.get("amount")),
+    t_date: formData.get("t_date"),
+    notes: formData.get("notes") || undefined,
   }
 
   const parsed = transactionSchema.safeParse(raw)
@@ -36,6 +37,7 @@ export async function createTransaction(formData: FormData) {
 
   revalidatePath("/transactions")
   revalidatePath("/dashboard")
+  revalidatePath("/reports")
   redirect("/transactions")
 }
 
@@ -55,4 +57,5 @@ export async function eliminarMovimiento(id: string) {
 
   revalidatePath("/transactions")
   revalidatePath("/dashboard")
+  revalidatePath("/reports")
 }

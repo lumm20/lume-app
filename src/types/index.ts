@@ -25,21 +25,21 @@ export type Category = IncomeCategory | ExpenseCategory
 export interface Transaction {
   id: string
   user_id: string
-  transaction_type: TransactionType
+  t_type: TransactionType
   category: Category
   description: string | null
   amount: number
-  transaction_date: string // ISO date: "2025-03-15"
+  t_date: string // ISO date: "2025-03-15"
   notes: string | null
   created_at: string
 }
 
 export interface TransactionInput {
-  transaction_type: TransactionType
+  t_type: TransactionType
   category: Category
   description?: string
   amount: number
-  transaction_date: string
+  t_date: string
   notes?: string
 }
 
