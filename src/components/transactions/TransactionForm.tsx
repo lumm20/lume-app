@@ -7,7 +7,7 @@ import { transactionSchema, type TransactionFormValues } from "@/lib/validations
 import { INCOME_CATEGORIES, EXPENSE_CATEGORIES } from "@/types/index"
 import { createTransaction } from "@/app/(dashboard)/transactions/new/actions"
 import { SubmitButton } from "../ui/SubmitButton"
-"w-full rounded-xl bg-stone-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
+
 export function TransactionForm() {
   const [loading, setLoading] = useState(false)
 
