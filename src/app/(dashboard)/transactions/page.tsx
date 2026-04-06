@@ -1,12 +1,11 @@
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { formatCurrency, formatDate } from "@/lib/utils"
-import { eliminarMovimiento } from "@/app/(dashboard)/transactions/new/actions"
-import { Plus, Trash2 } from "lucide-react"
+import { Plus } from "lucide-react"
 import type { Transaction } from "@/types/index"
 import { DeleteButton } from "@/components/transactions/DeleteButton"
+import { MonthFilter } from "@/components/transactions/MonthFilter"
 
-// Recibe searchParams para filtros por URL (?tipo=ingreso&mes=2025-03)
 export default async function TransactionsPage({
   searchParams,
 }: {
@@ -20,7 +19,7 @@ export default async function TransactionsPage({
     .order("t_date", { ascending: false })
     .order("created_at", { ascending: false })
 
-  const { t_type, t_month } = await searchParams
+  const { t_type, t_month } = searchParams
   if (t_type && t_type !== "all") {
     query = query.eq("t_type", t_type)
   }
@@ -36,6 +35,9 @@ export default async function TransactionsPage({
   const { data: transactions } = await query
 
   const activeType = t_type ?? "all"
+  const activeMonth = t_month ?? ""
+
+
 
   const FILTERS = [
     { value: "all", label: "Todos" },
@@ -61,7 +63,7 @@ export default async function TransactionsPage({
       </div>
 
       {/* Filtros */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap items-center">
         {FILTERS.map(({ value, label }) => (
           <Link
             key={value}
@@ -74,6 +76,7 @@ export default async function TransactionsPage({
             {label}
           </Link>
         ))}
+        <MonthFilter activeMonth={activeMonth} activeType={activeType}/>
       </div>
 
       {/* Tabla desktop*/}
