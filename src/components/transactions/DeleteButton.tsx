@@ -1,11 +1,11 @@
 "use client"
 
-import { eliminarMovimiento } from "@/app/(dashboard)/transactions/new/actions"
+import { deleteTransaction } from "@/app/(dashboard)/transactions/new/actions"
 import { Trash2 } from "lucide-react"
 
 export function DeleteButton({ id }: { id: string }) {
   return (
-    <form action={eliminarMovimiento.bind(null, id)}>
+    <form action={deleteTransaction.bind(null, id)}>
       <button
         type="submit"
         onClick={(e) => {
