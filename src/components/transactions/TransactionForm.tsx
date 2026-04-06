@@ -24,9 +24,10 @@ export function TransactionForm() {
     },
   })
 
-  const type = useWatch({name:"t_type", control})
+  const type = useWatch({control, name:"t_type"})
   const categories = type === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES
-
+  const inputClass = "w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors"
+  
   async function onSubmit(data: TransactionFormValues) {
     setLoading(true)
     const formData = new FormData()
@@ -44,7 +45,7 @@ export function TransactionForm() {
         {(["income", "expense"] as const).map((t) => (
           <label key={t} className="flex-1 cursor-pointer">
             <input type="radio" value={t} {...register("t_type")} className="sr-only" />
-            <div className={`rounded-xl border-2 px-4 py-2.5 text-center text-sm font-medium transition-all ${
+            <div className={`rounded-xl border-2 px-4 py-3 text-center text-sm font-medium transition-all ${
               type === t
                 ? t === "income"
                   ? "border-emerald-400 bg-emerald-50 text-emerald-700"
@@ -60,7 +61,7 @@ export function TransactionForm() {
       {/* Categoría */}
       <Field label="Categoría" error={errors.category?.message}>
         <select {...register("category")}
-          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors">
+          className={inputClass}>
           <option value="">Seleccionar...</option>
           {categories.map((c) => (
             <option key={c} value={c}>{c}</option>
@@ -76,7 +77,7 @@ export function TransactionForm() {
           min="0"
           placeholder="0.00"
           {...register("amount", { valueAsNumber: true })}
-          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors"
+          className={inputClass}
         />
       </Field>
 
@@ -85,7 +86,7 @@ export function TransactionForm() {
         <input
           type="date"
           {...register("t_date")}
-          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors"
+          className={inputClass}
         />
       </Field>
 
@@ -95,7 +96,7 @@ export function TransactionForm() {
           type="text"
           placeholder="Ej. Pastel 3 pisos boda García"
           {...register("description")}
-          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors"
+          className={inputClass}
         />
       </Field>
 
@@ -105,11 +106,11 @@ export function TransactionForm() {
           placeholder="Ej. Pago anticipado, pendiente entregar el sábado"
           rows={2}
           {...register("notes")}
-          className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors resize-none"
+          className={inputClass + " resize-none"}
         />
       </Field>
 
-      <SubmitButton initialText="Guardar movimiento" loadingText="Guardando..." className="w-full rounded-xl bg-stone-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"/>
+      <SubmitButton initialText="Guardar movimiento" loadingText="Guardando..." className="w-full rounded-xl bg-stone-800 px-4 py-3 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"/>
     </form>
   )
 }

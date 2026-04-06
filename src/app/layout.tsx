@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={`${geist.className} bg-gray-50 text-gray-900 antialiased`}>
+      <body className={`${geist.className} bg-stone-100 text-stone-900 antialiased`}>
         {children}
       </body>
     </html>
