@@ -26,18 +26,16 @@ export default async function TransactionsPage({
 
   if (t_month) {
     const [year, month] = t_month.split("-")
-    const from = `${year}-${month}-01`
     const lastDay = new Date(Number(year), Number(month), 0).getDate()
-    const to = `${year}-${month}-${lastDay}`
-    query = query.gte("t_date", from).lte("t_date", to)
+    query = query
+      .gte("fecha", `${t_month}-01`)
+      .lte("fecha", `${t_month}-${lastDay}`)
   }
 
   const { data: transactions } = await query
 
   const activeType = t_type ?? "all"
   const activeMonth = t_month ?? ""
-
-
 
   const FILTERS = [
     { value: "all", label: "Todos" },
