@@ -19,7 +19,7 @@ export default async function TransactionsPage({
     .order("t_date", { ascending: false })
     .order("created_at", { ascending: false })
 
-  const { t_type, t_month } = searchParams
+  const { t_type, t_month } = await searchParams
   if (t_type && t_type !== "all") {
     query = query.eq("t_type", t_type)
   }
