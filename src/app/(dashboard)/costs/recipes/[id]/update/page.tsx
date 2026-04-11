@@ -8,15 +8,16 @@ import { notFound } from "next/navigation"
 export default async function EditRecipePage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase =await createClient()
 
   const [{ data: recipe }, { data: ingredients }] = await Promise.all([
     supabase
       .from("recipes")
       .select("*, recipe_ingredients(*, ingredient:ingredients(*))")
-      .eq("id", params.id)
+      .eq("id", id)
       .single(),
     supabase
       .from("ingredients")
@@ -39,7 +40,7 @@ export default async function EditRecipePage({
       <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
         <RecipeForm
           ingredients={ingredients ?? []}
-          onSubmit={updateRecipe.bind(null, params.id)}
+          onSubmit={updateRecipe.bind(null, id)}
           defaultValues={recipe}
           submitLabel="Guardar cambios"
         />

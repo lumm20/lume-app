@@ -17,6 +17,7 @@ export default async function EditIngredientPage({
     .eq("id", params.id)
     .single()
 
+  console.log(ingredient)
   if (!ingredient) notFound()
 
   return (
