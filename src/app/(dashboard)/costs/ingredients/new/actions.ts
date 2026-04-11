@@ -3,7 +3,15 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { ingredientSchema } from "@/lib/validations/ingredient"
-import { getUser } from "@/lib/utils"
+import { createClient } from "@/lib/supabase/server"
+
+async function getUser(){
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect("/login")
+  return {user, supabase}
+}
 
 export async function createIngredient(formData: FormData) {
     const { supabase, user } = await getUser()

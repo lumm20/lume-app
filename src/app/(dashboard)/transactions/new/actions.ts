@@ -3,7 +3,15 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { transactionSchema } from "@/lib/validations/transaction"
-import { getUser } from "@/lib/utils"
+import { createClient } from "@/lib/supabase/server"
+
+async function getUser(){
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect("/login")
+  return {user, supabase}
+}
 
 export async function createTransaction(formData: FormData) {
   const {user, supabase} = await getUser()

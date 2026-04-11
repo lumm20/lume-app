@@ -1,8 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { Ingredient, RecipeResult } from "../types"
-import { createClient } from "./supabase/server"
-import { redirect } from "next/navigation"
+import { Ingredient, RecipeResult } from "@/types/index"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -50,12 +48,4 @@ export function calculateRecipe(
   const sellingPrice = totalCost * (1 + marginPct / 100)
 
   return { ingredientsCost, totalCost, sellingPrice }
-}
-
-export async function getUser(){
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect("/login")
-  return {user, supabase}
 }

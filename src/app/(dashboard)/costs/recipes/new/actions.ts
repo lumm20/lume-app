@@ -5,6 +5,14 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { recipeSchema } from "@/lib/validations/recipe"
 
+async function getUser(){
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect("/login")
+  return {user, supabase}
+}
+
 export async function createRecipe(data: {
   r_name: string
   overhead_pct: number
@@ -12,9 +20,7 @@ export async function createRecipe(data: {
   notes?: string
   ingredients: { ingredient_id: string; quantity: number }[]
 }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect("/login")
+  const {supabase, user} = await getUser()
 
   const parsed = recipeSchema.safeParse(data)
   if (!parsed.success) throw new Error(parsed.error.issues[0].message)
@@ -60,9 +66,7 @@ export async function updateRecipe(
     ingredients: { ingredient_id: string; quantity: number }[]
   }
 ) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect("/login")
+  const {supabase, user} = await getUser()
 
   const parsed = recipeSchema.safeParse(data)
   if (!parsed.success) throw new Error(parsed.error.issues[0].message)
@@ -100,9 +104,7 @@ export async function updateRecipe(
 }
 
 export async function deleteRecipe(id: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect("/login")
+  const {supabase, user} = await getUser()
 
   await supabase.from("recipes").delete().eq("id", id).eq("user_id", user.id)
 
