@@ -8,13 +8,14 @@ import { notFound } from "next/navigation"
 export default async function EditIngredientPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: ingredient } = await supabase
     .from("ingredients")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single()
 
   console.log(ingredient)
@@ -32,7 +33,7 @@ export default async function EditIngredientPage({
       <h1 className="text-xl font-semibold text-stone-800 mb-6">Editar ingrediente</h1>
       <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
         <IngredientForm
-          onSubmit={updateIngredient.bind(null, params.id)}
+          onSubmit={updateIngredient.bind(null, id)}
           defaultValues={ingredient}
           submitLabel="Guardar cambios"
         />
