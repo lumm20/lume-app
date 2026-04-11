@@ -1,5 +1,3 @@
-// types/index.ts
-
 export type TransactionType = "income" | "expense"
 
 export const INCOME_CATEGORIES = [
@@ -48,4 +46,50 @@ export interface MonthtlySummary {
   expenses: number
   profits: number
   totalTransactions: number
+}
+
+export type Unit = "g" | "kg" | "ml" | "l" | "pza"
+
+export const UNIDADES: { value: Unit; label: string }[] = [
+  { value: "g",   label: "Gramos (g)"    },
+  { value: "kg",  label: "Kilogramos (kg)" },
+  { value: "ml",  label: "Mililitros (ml)" },
+  { value: "l",   label: "Litros (l)"    },
+  { value: "pza", label: "Piezas (pza)"  },
+]
+
+export interface Ingredient {
+  id: string
+  user_id: string
+  i_name: string
+  price: number
+  quantity: number
+  unit: Unit
+  notes: string | null
+  created_at: string
+}
+
+export interface RecipeIngredient {
+  id: string
+  recipe_id: string
+  ingredient_id: string
+  quantity: number
+  ingredient?: Ingredient
+}
+
+export interface Recipe {
+  id: string
+  user_id: string
+  r_name: string
+  overhead_pct: number
+  margin_pct: number
+  notes: string | null
+  created_at: string
+  recipe_ingredients?: RecipeIngredient[]
+}
+
+export interface RecipeResult {
+  ingredientsCost: number
+  totalCost: number
+  sellingPrice: number
 }

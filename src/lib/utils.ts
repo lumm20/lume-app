@@ -1,6 +1,8 @@
-// lib/utils.ts
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { Ingredient, RecipeResult } from "../types"
+import { createClient } from "./supabase/server"
+import { redirect } from "next/navigation"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -32,4 +34,28 @@ export function getCurrentMonthRange(): { from: string; to: string } {
     .toISOString()
     .split("T")[0]
   return { from, to }
+}
+
+export function calculateRecipe(
+  ingredients: { quantity: number; ingredient: Ingredient }[],
+  overheadPct: number,
+  marginPct: number
+): RecipeResult {
+  const ingredientsCost = ingredients.reduce((sum, item) => {
+    const costPerUnit = item.ingredient.price / item.ingredient.quantity
+    return sum + costPerUnit * item.quantity
+  }, 0)
+
+  const totalCost = ingredientsCost * (1 + overheadPct / 100)
+  const sellingPrice = totalCost * (1 + marginPct / 100)
+
+  return { ingredientsCost, totalCost, sellingPrice }
+}
+
+export async function getUser(){
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect("/login")
+  return {user, supabase}
 }

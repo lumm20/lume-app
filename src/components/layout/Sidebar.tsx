@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ArrowLeftRight, BarChart2 } from "lucide-react";
+import { LayoutDashboard, ArrowLeftRight, BarChart2, Calculator } from "lucide-react";
 
 const NAV = [
   {
@@ -26,6 +26,12 @@ const NAV = [
     activeColor: "text-emerald-600",
     activeBg: "bg-emerald-50 border-emerald-200",
   },
+  { 
+    href: "/costs",
+    label: "Costos",
+    icon: Calculator,
+    activeColor: "text-amber-600",
+    activeBg: "bg-amber-50 border-amber-200" },
 ];
 
 // ── Sidebar desktop (visible en md+) ─────────────────────────────────────
