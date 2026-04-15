@@ -1,37 +1,42 @@
-import { createClient } from "@/lib/supabase/server"
-import { formatCurrency, calculateRecipe } from "@/lib/utils"
-import { ArrowLeft, Pencil } from "lucide-react"
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import type { Ingredient, RecipeIngredient } from "@/types/index"
+import { createClient } from "@/lib/supabase/server";
+import { formatCurrency, calculateRecipe } from "@/lib/utils";
+import { ArrowLeft, Pencil } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import type { Ingredient, RecipeIngredient } from "@/types/index";
 
 export default async function RecipeDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>;
 }) {
-  const supabase = await createClient()
+  const { id } = await params;
+  const supabase = await createClient();
   const { data: recipe } = await supabase
     .from("recipes")
-    .select(`
+    .select(
+      `
       *,
       recipe_ingredients (
         id, quantity, ingredient_id,
         ingredient:ingredients (*)
       )
-    `)
-    .eq("id", params.id)
-    .single()
+    `,
+    )
+    .eq("id", id)
+    .single();
 
-  if (!recipe) notFound()
+  if (!recipe) notFound();
 
   const items = (
-    recipe.recipe_ingredients as (RecipeIngredient & { ingredient: Ingredient })[]
+    recipe.recipe_ingredients as (RecipeIngredient & {
+      ingredient: Ingredient;
+    })[]
   )
     .filter((ri) => ri.ingredient)
-    .map((ri) => ({ quantity: ri.quantity, ingredient: ri.ingredient }))
+    .map((ri) => ({ quantity: ri.quantity, ingredient: ri.ingredient }));
 
-  const result = calculateRecipe(items, recipe.overhead_pct, recipe.margen_pct)
+  const result = calculateRecipe(items, recipe.overhead_pct, recipe.margen_pct);
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -42,10 +47,15 @@ export default async function RecipeDetailPage({
             href="/costs/recipes"
             className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 mb-3 transition-colors group"
           >
-            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            <ArrowLeft
+              size={14}
+              className="group-hover:-translate-x-0.5 transition-transform"
+            />
             Volver a recipes
           </Link>
-          <h1 className="text-xl font-semibold text-stone-800">{recipe.r_name}</h1>
+          <h1 className="text-xl font-semibold text-stone-800">
+            {recipe.r_name}
+          </h1>
           {recipe.notes && (
             <p className="text-sm text-stone-400 mt-0.5">{recipe.notes}</p>
           )}
@@ -90,7 +100,9 @@ export default async function RecipeDetailPage({
       {/* Desglose de ingredients */}
       <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
         <div className="px-5 py-4 border-b border-stone-100">
-          <h2 className="text-sm font-medium text-stone-700">Desglose de ingredients</h2>
+          <h2 className="text-sm font-medium text-stone-700">
+            Desglose de ingredients
+          </h2>
         </div>
         <table className="w-full text-sm">
           <thead>
@@ -103,10 +115,14 @@ export default async function RecipeDetailPage({
           </thead>
           <tbody className="divide-y divide-stone-50">
             {items.map(({ quantity, ingredient }) => {
-              const costoLinea = (quantity / ingredient.quantity) * ingredient.price
-              const pricePerUnit = ingredient.price / ingredient.quantity
+              const costoLinea =
+                (quantity / ingredient.quantity) * ingredient.price;
+              const pricePerUnit = ingredient.price / ingredient.quantity;
               return (
-                <tr key={ingredient.id} className="hover:bg-stone-50 transition-colors">
+                <tr
+                  key={ingredient.id}
+                  className="hover:bg-stone-50 transition-colors"
+                >
                   <td className="px-5 py-3.5 font-medium text-stone-800">
                     {ingredient.i_name}
                   </td>
@@ -120,12 +136,15 @@ export default async function RecipeDetailPage({
                     {formatCurrency(costoLinea)}
                   </td>
                 </tr>
-              )
+              );
             })}
           </tbody>
           <tfoot>
             <tr className="border-t border-stone-200 bg-stone-50">
-              <td colSpan={3} className="px-5 py-3 text-sm font-medium text-stone-600 text-right">
+              <td
+                colSpan={3}
+                className="px-5 py-3 text-sm font-medium text-stone-600 text-right"
+              >
                 Total ingredients
               </td>
               <td className="px-5 py-3 text-right font-semibold text-stone-800 tabular-nums">
@@ -138,8 +157,13 @@ export default async function RecipeDetailPage({
 
       {/* Resumen del cálculo */}
       <div className="bg-white rounded-2xl border border-stone-200 p-5 space-y-3">
-        <h2 className="text-sm font-medium text-stone-700 mb-4">Resumen del cálculo</h2>
-        <Row label="Costo de ingredients" value={formatCurrency(result.ingredientsCost)} />
+        <h2 className="text-sm font-medium text-stone-700 mb-4">
+          Resumen del cálculo
+        </h2>
+        <Row
+          label="Costo de ingredients"
+          value={formatCurrency(result.ingredientsCost)}
+        />
         <Row
           label={`Overhead ${recipe.overhead_pct}% (tiempo + servicios)`}
           value={formatCurrency(result.totalCost - result.ingredientsCost)}
@@ -163,7 +187,7 @@ export default async function RecipeDetailPage({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function Row({
@@ -172,23 +196,27 @@ function Row({
   bold = false,
   highlight = false,
 }: {
-  label: string
-  value: string
-  bold?: boolean
-  highlight?: boolean
+  label: string;
+  value: string;
+  bold?: boolean;
+  highlight?: boolean;
 }) {
   return (
     <div className="flex items-center justify-between text-sm">
-      <span className={bold ? "font-medium text-stone-700" : "text-stone-500"}>{label}</span>
-      <span className={`tabular-nums ${
-        highlight
-          ? "text-lg font-bold text-amber-700"
-          : bold
-          ? "font-semibold text-stone-800"
-          : "text-stone-600"
-      }`}>
+      <span className={bold ? "font-medium text-stone-700" : "text-stone-500"}>
+        {label}
+      </span>
+      <span
+        className={`tabular-nums ${
+          highlight
+            ? "text-lg font-bold text-amber-700"
+            : bold
+              ? "font-semibold text-stone-800"
+              : "text-stone-600"
+        }`}
+      >
         {value}
       </span>
     </div>
-  )
+  );
 }
