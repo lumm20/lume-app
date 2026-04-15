@@ -3,7 +3,7 @@ import { formatCurrency, calculateRecipe } from "@/lib/utils";
 import { ArrowLeft, Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { Ingredient, RecipeIngredient } from "@/types/index";
+import type { Recipe, Ingredient, RecipeIngredient } from "@/types/index";
 
 export default async function RecipeDetailPage({
   params,
@@ -24,7 +24,7 @@ export default async function RecipeDetailPage({
     `,
     )
     .eq("id", id)
-    .single();
+    .single<Recipe>();
 
   if (!recipe) notFound();
 
@@ -36,7 +36,7 @@ export default async function RecipeDetailPage({
     .filter((ri) => ri.ingredient)
     .map((ri) => ({ quantity: ri.quantity, ingredient: ri.ingredient }));
 
-  const result = calculateRecipe(items, recipe.overhead_pct, recipe.margen_pct);
+  const result = calculateRecipe(items, recipe.overhead_pct, recipe.margin_pct);
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -51,7 +51,7 @@ export default async function RecipeDetailPage({
               size={14}
               className="group-hover:-translate-x-0.5 transition-transform"
             />
-            Volver a recipes
+            Volver a recetas
           </Link>
           <h1 className="text-xl font-semibold text-stone-800">
             {recipe.r_name}
@@ -89,7 +89,7 @@ export default async function RecipeDetailPage({
         </div>
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
           <p className="text-xs font-medium uppercase tracking-wide text-amber-600 mb-2">
-            Precio sugerido ({recipe.margen_pct}% margen)
+            Precio sugerido ({recipe.margin_pct}% margen)
           </p>
           <p className="text-2xl font-semibold text-amber-700 tabular-nums">
             {formatCurrency(result.sellingPrice)}
@@ -101,13 +101,13 @@ export default async function RecipeDetailPage({
       <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
         <div className="px-5 py-4 border-b border-stone-100">
           <h2 className="text-sm font-medium text-stone-700">
-            Desglose de ingredients
+            Desglose de ingredientes
           </h2>
         </div>
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-stone-50 text-stone-400 text-xs uppercase tracking-wide border-b border-stone-100">
-              <th className="text-left px-5 py-3">Ingredient</th>
+              <th className="text-left px-5 py-3">Ingrediente</th>
               <th className="text-right px-5 py-3">Cantidad usada</th>
               <th className="text-right px-5 py-3">Precio unitario</th>
               <th className="text-right px-5 py-3">Costo</th>
@@ -145,7 +145,7 @@ export default async function RecipeDetailPage({
                 colSpan={3}
                 className="px-5 py-3 text-sm font-medium text-stone-600 text-right"
               >
-                Total ingredients
+                Total ingredientes
               </td>
               <td className="px-5 py-3 text-right font-semibold text-stone-800 tabular-nums">
                 {formatCurrency(result.ingredientsCost)}
@@ -175,7 +175,7 @@ export default async function RecipeDetailPage({
         />
         <div className="border-t border-stone-100 pt-3">
           <Row
-            label={`Margen de ganancia ${recipe.margen_pct}%`}
+            label={`Margen de ganancia ${recipe.margin_pct}%`}
             value={formatCurrency(result.sellingPrice - result.totalCost)}
           />
           <Row
