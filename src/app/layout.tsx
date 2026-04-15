@@ -5,8 +5,8 @@ import "./globals.css"
 const geist = Geist({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "PastryBooks",
-  description: "Control de finanzas para tu negocio de postres",
+  title: "LumeApp",
+  description: "Control de finanzas para Lume Bakery",
 }
 
 export default function RootLayout({

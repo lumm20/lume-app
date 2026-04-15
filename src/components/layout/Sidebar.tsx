@@ -40,7 +40,7 @@ function DesktopSidebar({ pathname }: { pathname: string }) {
     <aside className="hidden md:flex w-56 shrink-0 border-r border-stone-200 bg-stone-50 flex-col">
       <div className="h-14 flex items-center gap-2.5 px-5 border-b border-stone-200">
         <span className="text-xl">🍰</span>
-        <span className="font-semibold text-stone-800 text-sm tracking-tight">PastryBooks</span>
+        <span className="font-semibold text-stone-800 text-sm tracking-tight">LumeApp</span>
       </div>
       <nav className="flex-1 p-3 space-y-0.5">
         {NAV.map(({ href, label, icon: Icon, activeColor, activeBg }) => {
@@ -62,7 +62,7 @@ function DesktopSidebar({ pathname }: { pathname: string }) {
         })}
       </nav>
       <div className="p-4 border-t border-stone-200">
-        <p className="text-xs text-stone-400">PastryBooks v1.0</p>
+        <p className="text-xs text-stone-400">LumeApp v1.0</p>
       </div>
     </aside>
   )

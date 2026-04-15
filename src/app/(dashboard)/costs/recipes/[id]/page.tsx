@@ -161,7 +161,7 @@ export default async function RecipeDetailPage({
           Resumen del cálculo
         </h2>
         <Row
-          label="Costo de ingredients"
+          label="Costo de ingredientes"
           value={formatCurrency(result.ingredientsCost)}
         />
         <Row

@@ -10,8 +10,8 @@ export default function AuthLayout({
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white shadow-sm border border-stone-200 text-2xl mb-4">
             🍰
           </div>
-          <h1 className="text-xl font-semibold text-stone-800">PastryBooks</h1>
-          <p className="text-sm text-stone-400 mt-1">Control de finanzas para tu negocio</p>
+          <h1 className="text-xl font-semibold text-stone-800">LumeApp</h1>
+          <p className="text-sm text-stone-400 mt-1">Control de finanzas</p>
         </div>
         {children}
       </div>
