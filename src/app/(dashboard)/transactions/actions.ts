@@ -99,4 +99,5 @@ export async function updateTransaction(id: string, formData: FormData) {
   revalidatePath("/transactions")
   revalidatePath("/dashboard")
   revalidatePath("/reports")
+  redirect('/transactions')
 }

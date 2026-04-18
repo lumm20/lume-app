@@ -2,24 +2,9 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useFormStatus } from "react-dom"
-import { Loader2 } from "lucide-react"
 import { ingredientSchema, type IngredientFormValues } from "@/lib/validations/ingredient"
 import { UNIDADES, type Ingredient } from "@/types/index"
-
-function SubmitButton({ label }: { label: string }) {
-  const { pending } = useFormStatus()
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full rounded-xl bg-stone-800 px-4 py-3 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
-    >
-      {pending && <Loader2 size={15} className="animate-spin" />}
-      {pending ? "Guardando..." : label}
-    </button>
-  )
-}
+import { SubmitButton } from "@/components/ui/SubmitButton"
 
 interface Props {
   onSubmit: (formData: FormData) => Promise<void>
@@ -119,7 +104,10 @@ export function IngredientForm({
         />
       </Field>
 
-      <SubmitButton label={submitLabel} />
+      <SubmitButton 
+      initialText={submitLabel} 
+      loadingText="Guardando..." 
+      className="w-full rounded-xl bg-stone-800 px-4 py-3 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2" />
     </form>
   )
 }
