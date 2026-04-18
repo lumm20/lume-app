@@ -13,7 +13,7 @@ export default async function EditTransactionPage({
   const supabase = await createClient()
   const { id } = await params;
   const { data: movimiento } = await supabase
-    .from("movimientos")
+    .from("transactions")
     .select("*")
     .eq("id", id)
     .single()
@@ -23,7 +23,7 @@ export default async function EditTransactionPage({
   return (
     <div className="max-w-lg">
       <Link
-        href="/movimientos"
+        href="/transactions"
         className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 mb-6 transition-colors group"
       >
         <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
