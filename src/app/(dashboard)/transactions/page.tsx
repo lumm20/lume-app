@@ -114,7 +114,15 @@ export default async function TransactionsPage({
                     {t.t_type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                   </td>
                   <td className="px-5 py-3.5">
-                    <DeleteButton id={t.id} />
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity justify-end">
+                      <Link
+                        href={`/transactions/${t.id}/update`}
+                        className="text-xs text-stone-400 hover:text-stone-700 transition-colors"
+                      >
+                        Editar
+                      </Link>
+                      <DeleteButton id={t.id} />
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -152,7 +160,15 @@ export default async function TransactionsPage({
                 }`}>
                 {t.t_type === "income" ? "+" : "−"}{formatCurrency(t.amount)}
               </span>
-              <DeleteButton id={t.id} />
+              <div className="flex items-center gap-2 justify-end mt-2">
+                <Link
+                  href={`/transactions/${t.id}/update`}
+                  className="text-xs text-stone-400 hover:text-stone-700"
+                >
+                  Editar
+                </Link>
+                <DeleteButton id={t.id} />
+              </div>
             </div>
           </div>
         )) : (

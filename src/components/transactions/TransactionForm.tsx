@@ -5,10 +5,19 @@ import { useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { transactionSchema, type TransactionFormValues } from "@/lib/validations/transaction"
 import { INCOME_CATEGORIES, EXPENSE_CATEGORIES } from "@/types/index"
-import { createTransaction } from "@/app/(dashboard)/transactions/new/actions"
-import { SubmitButton } from "../ui/SubmitButton"
+import { createTransaction } from "@/app/(dashboard)/transactions/actions"
+import { SubmitButton } from "@/components/ui/SubmitButton"
 
-export function TransactionForm() {
+interface Props {
+  onSubmit?: (formData: FormData) => Promise<void>
+  defaultValues?: Partial<TransactionFormValues>
+  submitLabel?: string
+}
+
+export function TransactionForm({onSubmit: onSubmitExternal,
+  defaultValues,
+  submitLabel = "Guardar movimiento",
+}: Props) {
   const [loading, setLoading] = useState(false)
 
   const {
@@ -19,8 +28,12 @@ export function TransactionForm() {
   } = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      t_type: "income",
-      t_date: new Date().toISOString().split("T")[0],
+      t_type: defaultValues?.t_type ?? "income",
+      t_date: defaultValues?.t_date ??new Date().toISOString().split("T")[0],
+      category: defaultValues?.category ?? undefined,
+      amount: defaultValues?.amount ?? undefined,
+      description: defaultValues?.description ?? "",
+      notes: defaultValues?.notes ?? "",
     },
   })
 
@@ -29,12 +42,13 @@ export function TransactionForm() {
   const inputClass = "w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 focus:bg-white transition-colors"
   
   async function onSubmit(data: TransactionFormValues) {
-    setLoading(true)
     const formData = new FormData()
     Object.entries(data).forEach(([k, v]) => {
       if (v !== undefined) formData.append(k, String(v))
     })
-    await createTransaction(formData)
+    const action = onSubmitExternal ?? createTransaction
+    setLoading(true)
+    await action(formData)
     setLoading(false)
   }
 
@@ -110,7 +124,7 @@ export function TransactionForm() {
         />
       </Field>
 
-      <SubmitButton initialText="Guardar movimiento" loadingText="Guardando..." className="w-full rounded-xl bg-stone-800 px-4 py-3 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"/>
+      <SubmitButton initialText={submitLabel} loadingText="Guardando..." className="w-full rounded-xl bg-stone-800 px-4 py-3 text-sm font-medium text-white hover:bg-stone-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"/>
     </form>
   )
 }

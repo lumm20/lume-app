@@ -1,6 +1,6 @@
 "use client"
 
-import { deleteTransaction } from "@/app/(dashboard)/transactions/new/actions"
+import { deleteTransaction } from "@/app/(dashboard)/transactions/actions"
 import { Trash2 } from "lucide-react"
 
 export function DeleteButton({ id }: { id: string }) {
